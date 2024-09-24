@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
+import Counter from "./Counter";
 function Users() {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(false);
   const [id, setId] = useState("");
+
+  const clickHandler = async () => {
+    const response = await fetch(
+      `https://jsonplaceholder.typicode.com/users/${id}`
+    );
+    const json = await response.json();
+    console.log(json);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,25 +26,26 @@ function Users() {
         setError(true);
       }
     };
-    console.log("heyyyy");
     fetchData();
-  }, [id]);
+  }, []);
   return (
     <div>
+      {id > 20 && <Counter />}
       <input
         type="text"
         placeholder="Enter ID"
         value={id}
         onChange={(e) => setId(e.target.value)}
       />
-      <h1></h1>
+
+      <button onClick={clickHandler}>Search</button>
       {!users.length && !error && <h3>Loading.... Please Wait !</h3>}
       <h1>Users are:</h1>
-      {/* <ul>
+      <ul>
         {users.map((user) => (
           <li key={user.id}>{user.name}</li>
         ))}
-      </ul> */}
+      </ul>
       {error && <h4>There is something wrong, please wait a little more!</h4>}
     </div>
   );
